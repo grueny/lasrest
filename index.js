@@ -9,68 +9,56 @@ app.get('/', function (req, res) {
     res.send(`<html><body>
     <h2 Mögliche URLs</h2>
     <ul>
-      <li><a href="http://${server}/partner?q=Produkt">Partnersuche</a></li>
-      <li><a href="http://${server}/partner/4711">Konkrete Partner Informationen</li>
-      <li><a href="http://${server}/partner/4711/haushalt">Haushalt Informationen</li>
-      <li><a href="http://${server}/partner/4711/kontakt">Kontakt Informationen</li>
-      <li><a href="http://${server}/angebote?partnerId=4711&mode=header">Angebote zu einem Kunden</li>
-      <li><a href="http://${server}/antraege?partnerId=4711&mode=header">Anträge zu einem Kunden</li>
-      <li><a href="http://${server}/vertraege?partnerId=4711&mode=header">Verträge zu einem Kunden</li>
+      <li><a href="/partner?q=Produkt">Partnersuche</a></li>
+      <li><a href="/partner/4711">Konkrete Partner Informationen</li>
+      <li><a href="/partner/4711/haushalt">Haushalt Informationen</li>
+      <li><a href="/partner/4711/kontakt">Kontakt Informationen</li>
+      <li><a href="/angebote?partnerId=4711&mode=header">Angebote zu einem Kunden</li>
+      <li><a href="/antraege?partnerId=4711&mode=header">Anträge zu einem Kunden</li>
+      <li><a href="/vertraege?partnerId=4711&mode=header">Verträge zu einem Kunden</li>
       <li><form action="http://${server}/angebot/kraftfahrt/berechnen" method="post"><button type="submit">Kraftfahrt berechnen</button></form>
     </ul>
-    </body>
-    </html>
+    </body>    </html>
     `);
 
 
 });
-
+var partners = [{
+    partnerId: 4711,
+    partnerURI: `http://${server}/partner/4711`,
+    name: 'Produkt',
+    vorname: 'Peter',
+    ort: 'Münster',
+    status: 'Kunde'
+},
+{
+    partnerId: 4712,
+    partnerURI: `http://${server}/partner/4713`,
+    name: 'Produkt',
+    vorname: 'Hans',
+    ort: 'Osnabrück',
+    status: 'Kunde'
+},
+{
+    partnerId: 4713,
+    partnerURI: `http://${server}/partner/4712`,
+    name: 'Produkt',
+    vorname: 'Günther',
+    ort: 'Dortmund',
+    status: 'Interessent'
+}];
 app.get('/partner', function (req, res) {
-
-    // viele
-    var partners = [{
-        partnerId: 4711,
-        partnerURI: `http://${server}/partner/4711`,
-        name: 'Produkt',
-        vorname: 'Peter',
-        ort: 'Münster',
-        status: 'Kunde'
-    },
-        {
-            partnerId: 4712,
-            partnerURI: `http://${server}/partner/4713`,
-            name: 'Produkt',
-            vorname: 'Hans',
-            ort: 'Osnabrück',
-            status: 'Kunde'
-        },
-        {
-            partnerId: 4713,
-            partnerURI: `http://${server}/partner/4712`,
-            name: 'Produkt',
-            vorname: 'Günther',
-            ort: 'Dortmund',
-            status: 'Interessent'
-        }];
-
     //TODO einer für suche nach VSNR                    
     res.send(partners);
 
 });
 app.get('/partner/:id', function (req, res) {
     //TODO zwei unterschiedliche Partner herausgeben
-    var partner = {
-        partnerId: 4711,
-        partnerURI: `http://${server}/partner/4711`,
-        name: 'Produkt',
-        vorname: 'Peter',
-        ort: 'Münster',
-        status: 'Kunde',
-        plz: 48153,
-        strasse: 'Hammerstr. 50',
-        tel: "0251123456679"
-    };
-    res.send(partner);
+    var found = partners.filter((p)=> p.partnerId===parseInt(req.params.id))[0];
+    if(found)
+        res.send(found);
+    else
+        res.status(404).end();
 });
 
 app.get('/partner/:id/haushalt', function (req, res) {
@@ -161,6 +149,7 @@ app.get('/brief/empfaenger', function (req, res) {
 });
 
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`server running on port ${port} (http://${server})`);
-});
+})
+;
