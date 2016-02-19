@@ -3,70 +3,72 @@ REST-Services-Mockups
 
 
 #### Use Case 1
-'/partner?q='Peter Produkt'
-Result json array mit von 10 Partner
+Partnersuche mit dem Namen "Peter Produkt"  
+'/partner?q='Peter Produkt'  
+Result json array mit von 10 Partner   
 
-Detail-Informationen zum Partner
+Detail-Informationen zum Partner  
 '/partner/id/
-zum Haushalt
+
+zum Haushalt  
 '/partner/id/haushalt
 
-zu den Kontakten
+zu den Kontakten  
 '/partner/id/kontakt
 
-zu den Angeboten
+zu den Angeboten  
 '/angebote?partnerId=:partnerId
 
-zu den Anträgen
+zu den Anträgen  
 '/antraege?partnerId=:partnerId
 
-zu den Verträge
+zu den Verträge  
 '/vertraege?partnerId=:partnerId
 
-Vorbelegungen zum Angebot
+Vorbelegungen zum Angebot  
 '/angebot/kraftfahrt/vorbelegung?partnerId=:partnerId'
 
-Angebot Berechnen mit Fehlermeldung
-Post '/angebot/kraftfahrt/berechnen'
-Get 'angebot/kraftfahrt/berechnetesAngebot/id
+Angebot Berechnen mit Fehlermeldung  
+Post '/angebot/kraftfahrt/berechnen'  
+Get 'angebot/kraftfahrt/berechnetesAngebot/id  
 Fehlermeldung json array
 
-Berufauswahl
-'berufe?q='inf'
+Berufauswahl    
+'berufe?q='inf'  
 json array mit Berufen
 
-Angebot speichern
+Angebot speichern  
 Post '/angebot/
 
-Angebot kopieren
-Post '/angebot?angebotId=:angebotId
+Angebot kopieren  
+Post '/angebot?angebotId=:angebotId    
 Redirect Get angebotId2
 
-Partnersuche anhand einer vsnr
-'/partner?q=4711'
-Partner-Detaildaten
-'/partner/id'
-Vertragsdaten
+Partnersuche anhand einer vsnr  
+'/partner?q=4711'  
+Partner-Detaildaten  
+'/partner/id'  
+Vertragsdaten  
 '/vertrag/vsnr/' liefert vertrag
 
-Schaden-Daten zum Vorbelegen
+Schaden-Daten zum Vorbelegen  
 Get '/schaden/kraftfahrt/vorbelegung?partnerId=:partnerId'
 
 
 
 
 #### UseCase 2
-Briefkasten von Sachbearbeiter mit der UserId m50000
-'/briefkasten/m50000
-json array von briefkasten header infos inkl gehe zu bezug -- gehe zu vertrag
+Briefkasten von Sachbearbeiter mit der UserId m50000  
+'/briefkasten/m50000  
+json array von briefkasten header infos inkl gehe zu bezug -- gehe zu vertrag  
 
-Vertrag Detaildaten
-'/vertrag/vsnr/
+Vertrag Detaildaten  
+'/vertrag/vsnr/  
 
 
-UseCase 3
+#### UseCase 3
 
-Briefvorlagen
-'/brief/vorlagen/'
-Briefempfänger
-'/brief/empfaenger'
+Briefvorlagen  
+'/brief/vorlagen/'  
+Briefempfänger  
+'/brief/empfaenger'  
