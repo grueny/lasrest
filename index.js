@@ -10,13 +10,22 @@ app.get('/', function (req, res) {
     <h2 Mögliche URLs</h2>
     <ul>
       <li><a href="/partner?q=Produkt">Partnersuche</a></li>
-      <li><a href="/partner/4711">Konkrete Partner Informationen</li>
-      <li><a href="/partner/4711/haushalt">Haushalt Informationen</li>
-      <li><a href="/partner/4711/kontakt">Kontakt Informationen</li>
-      <li><a href="/angebote?partnerId=4711&mode=header">Angebote zu einem Kunden</li>
-      <li><a href="/antraege?partnerId=4711&mode=header">Anträge zu einem Kunden</li>
-      <li><a href="/vertraege?partnerId=4711&mode=header">Verträge zu einem Kunden</li>
-      <li><form action="http://${server}/angebot/kraftfahrt/berechnen" method="post"><button type="submit">Kraftfahrt berechnen</button></form>
+      <li><a href="/partner/4711">Konkrete Partner Informationen</a></li>
+      <li><a href="/partner/4711/haushalt">Haushalt Informationen</a></li>
+      <li><a href="/partner/4711/kontakt">Kontakt Informationen</a></li>
+      <li><a href="/angebote?partnerId=4711&mode=header">Angebote zu einem Kunden</a></li>
+      <li><a href="/antraege?partnerId=4711&mode=header">Anträge zu einem Kunden</a></li>
+      <li><a href="/vertraege?partnerId=4711&mode=header">Verträge zu einem Kunden</a></li>
+      <li><form action="http://${server}/angebot/kraftfahrt/berechnen" method="post"><button type="submit">Kraftfahrt berechnen</button></form></li>
+      <li><form action="http://${server}/berufe" method="GET"><input type="text" name="q"/><button type="submit">Berufe auswählen</button></form></li>
+      <li><form action="http://${server}/angebot" method="POST"><button type="submit">Angebot speichern</button></form></li>
+      <li><form action="http://${server}/angebot" method="POST"><input type="text" name="angebotId"/><button type="submit">Angebot kopieren</button></form></li>
+      <li><a href="/vertrag/123456789">Vertrag 123456789 anzeigen</a></li>
+      <li><a href="/schaden/kraftfahrt/vorbelegung">Kraftfahrtvorbelegung</a></li>
+      <li><a href="briefkasten/m50000">Briefkasten für m50000</a></li>
+      <li><a href="/vertrag/987654321">Vertrag 987654321</a></li>
+      <li><a href="/brief/vorlagen">Briefvorlagen</a></li>
+      <li><a href="/brief/empfaenger">Briefempfänger</li>    
     </ul>
     </body>    </html>
     `);
@@ -107,6 +116,7 @@ app.get('/berufe', function (req, res) {
 
 app.post('/angebot', function (req, res) {
     //theoretisch speichern
+    res.redirect('/');
 });
 
 app.post('/angebot?angebotId=4711', function (req, res) {
