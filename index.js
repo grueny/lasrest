@@ -68,41 +68,39 @@ app.get('/partner', function (req, res) {
 app.get('/partner/:id', function (req, res) {
     //TODO zwei unterschiedliche Partner herausgeben
     var partnerDetails = [{
-        partnerId: 4711,
-        partnerURI: `http://${server}/partner/4711`,
-        anrede: 'Herr',
-        name: 'Produkt',
-        vorname: 'Peter',
-        geburtsdatum: '',
-        alter: -1,
-        staatsang: 'deutsch',
-        familienstand: 'verheiratet',
-        anzahlKinder: 2,
-        telnummer: '0173 34324525',
-        beruf: 'Kindergärtner',
-        anschrift: {strasse: 'Lindenstr. 11', plz: '48362', ort: 'Münster', stadtteil: 'Aaseestadt'},
-        status: 'Kunde'
-    },
-        {
-            partnerId: 4712,
-            partnerURI: `http://${server}/partner/4713`,
+            partnerId: 4711,
+            partnerURI: `http://${server}/partner/4711`,
             anrede: 'Herr',
             name: 'Produkt',
-            vorname: 'Hans',
-            geburtsdatum: '15.05.1958',
-            alter: 58,
+            vorname: 'Peter',
+            geburtsdatum: '',
+            alter: -1,
             staatsang: 'deutsch',
-            familienstand: 'ledig',
-            anzahlKinder: 0,
-            telnummer: '0362 63636525',
-            beruf: 'Polizist',
-            anschrift: {strasse: 'Hauptstr. 13', plz: '45353', ort: 'Osnabrück', stadtteil: 'Stadtzentrum'}, ',
-        status
-    :
-    'Kunde'
-}
-    ]
-    ;
+            familienstand: 'verheiratet',
+            anzahlKinder: 2,
+            telnummer: '0173 34324525',
+            beruf: 'Kindergärtner',
+            anschrift: {strasse: 'Lindenstr. 11', plz: '48362', ort: 'Münster', stadtteil: 'Aaseestadt'},
+            status: 'Kunde'
+        },
+            {
+                partnerId: 4712,
+                partnerURI: `http://${server}/partner/4713`,
+                anrede: 'Herr',
+                name: 'Produkt',
+                vorname: 'Hans',
+                geburtsdatum: '15.05.1958',
+                alter: 58,
+                staatsang: 'deutsch',
+                familienstand: 'ledig',
+                anzahlKinder: 0,
+                telnummer: '0362 63636525',
+                beruf: 'Polizist',
+                anschrift: {strasse: 'Hauptstr. 13', plz: '45353', ort: 'Osnabrück', stadtteil: 'Stadtzentrum'},
+                status: 'Kunde'
+            }
+        ]
+        ;
     var found = partnerDetails.filter((p) => p.partnerId === parseInt(req.params.id))[0];
     if (found)
         res.send(found);
@@ -111,7 +109,7 @@ app.get('/partner/:id', function (req, res) {
 });
 // Haushaltsdaten für Kundenübersicht
 app.get('/partner/:id/haushalt', function (req, res) {
-    var haushalt = [{beziehung: 'Frau', name: 'Produkt', vorname: 'Petra'},
+    var haushalt = [{beziehung: 'Frau', name: 'Produkt', vorname: 'Petra', geburtsdatum:'23.04.1974 45J'},
         {beziehung: 'Lebensgefährte', name: 'Herr Klaus Produkt', geburtsdatum: '30.04.1976 39J'}];
     res.send(haushalt);
 
@@ -159,12 +157,12 @@ app.post('/angebot/kraftfahrt/berechnen', function (req, res) {
 //Fehler wird zurückgegeben
 app.get('/angebot/kraftfahrt/berechnetesAngebot/:id', function (req, res) {
     var fehler = [
-        {fehlerkategorie: "Fehler", fehlertext: 'Es ist noch kein Beruf angegeben', fehlerfeld: '???'},
+        {fehlerkategorie: "Fehler", fehlertext: 'Es ist noch kein Beruf angegeben', fehlerfeld: 'beruf'},
         {
             fehlerkategorie: 'Fehler',
             fehlertext: 'Es ist keine Zahlungsweise angegeben',
-            fehlerfeld: '???'
-        }];//TODO
+            fehlerfeld: 'zahlungsweise'
+        }];
     res.send(fehler);
 });
 // Auswahl des Berufe-Dialogs /berufe?q=...
@@ -175,10 +173,11 @@ app.get('/berufe', function (req, res) {
 // Angebot speichern
 app.post('/angebot', function (req, res) {
     //theoretisch speichern
-    res.redirect('/'); //TODO
+    res.redirect('/'); //TODO 200 zurüc ohne content
 });
 //
 app.post('/angebot?angebotId=4711', function (req, res) {
+    //theoretisch antrag 4711 kopieren in 4712
     res.redirect('/angebot/4712');
 });
 
@@ -200,20 +199,20 @@ app.get('/angebot/4712', function (req, res) {
             beliebigeFahrer: 'unbekannt',
             nachtAbstellplatz: 'Straßenrand',
             fahrleistungKm: 30000,
-            kilometerstand:120433,
-            abweichenderFahrzeughalter:false,
+            kilometerstand: 120433,
+            abweichenderFahrzeughalter: false,
             nutzung: 'privat',
-            selbstGenEigentum:true,
-            wohneigentumart:'Wohnung'
+            selbstGenEigentum: true,
+            wohneigentumart: 'Wohnung'
 
         },
-        versSchutz:{
+        versSchutz: {
             haftpflichSFR: 'SF0 10%',
             volkaskoSFR: 'SF0 57%',
             tarifgruppe: 'normal',
             rahmenvertrag: 'keiner',
-            versBeginn:'25.02.2016',
-            zahlungsweise:'monatlich',
+            versBeginn: '25.02.2016',
+            zahlungsweise: 'monatlich',
 
         }
     };//TODO komplettes Angebot (vorschäden, dokumentation, vorverträge)?
@@ -231,8 +230,13 @@ app.get('/schaden/kraftfahrt/vorbelegung', function (req, res) {
 });
 
 app.get('/briefkasten/:userid', function (req, res) {
-    var briefkasten = [{datum:'16.03.2015',text: 'Wiedervorlage', bezugText:'Vers 987654321', bezugsURI: `http://${server}/vertrag/987654321`},
-        {datum:'20.03.2015',text:'UB-Vorlage', bezugText:''}];//TODO
+    var briefkasten = [{
+        datum: '16.03.2015',
+        text: 'Wiedervorlage',
+        bezugText: 'Vers 987654321',
+        bezugsURI: `http://${server}/vertrag/987654321`
+    },
+        {datum: '20.03.2015', text: 'UB-Vorlage', bezugText: ''}];//TODO
     res.send(briefkasten);
 });
 
@@ -253,7 +257,7 @@ app.get('/brief/empfaenger', function (req, res) {
 });
 
 
-app.listen(port, () = > {
+app.listen(port, () => {
     console.log(`server running on port ${port} (http://${server})`);
 })
 ;
