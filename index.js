@@ -1,9 +1,12 @@
-'use strict';
+    'use strict';
 
 const express = require('express'),
     app = express(),
+    cors = require('cors'),
     port = process.env.PORT || 8080,
     server = `localhost:${port}`;
+
+app.use(cors());
 
 app.get('/', function (req, res) {
     res.send(`<html><body>
