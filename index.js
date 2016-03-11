@@ -223,12 +223,72 @@ app.get('/angebot/4712', function (req, res) {
 });
 
 app.get('/vertrag/123456789', function (req, res) {
-    var vertrag = {};//TODO
+    // ähnlich einem angebot.
+    var vertrag = {
+        vsnr:123456789,
+        fahrzeugdaten: {
+            fahrzeugart: 'PKW',
+            kennzeichen: 'MS-CH 444',
+            hsn: 432,
+            typschl: 234,
+            erstzulassung: '20.05.2015',
+            fahrgestell: 'dj3rij35j42',
+            fahrzeugstaerkePS: 340,
+            austauschmotor: false,
+            kennzeichenart: 'schwarzes Kennzeichen',
+            wechselkennzeichen: false
+        },
+        vorschaeden :
+            [
+                {datum:'20.07.2015',schadenhoehe:3500},
+                {datum:'20.09.2015',schadenhoehe:1500}
+            ]
+
+        ,
+        vorversicherer:
+            [
+                {name:'HUK',kuendigungsgrund:'durch Versicherungsnehmer'},
+                {name:'Allianz',kuendigungsgrund:'Schaden'}
+            ]
+
+        ,
+        nutzung: {
+            beliebigeFahrer: 'unbekannt',
+            nachtAbstellplatz: 'Straßenrand',
+            fahrleistungKm: 30000,
+            kilometerstand: 120433,
+            abweichenderFahrzeughalter: false,
+            nutzung: 'privat',
+            selbstGenEigentum: true,
+            wohneigentumart: 'Wohnung'
+
+        },
+        versSchutz: {
+            haftpflichSFR: 'SF0 10%',
+            volkaskoSFR: 'SF0 57%',
+            tarifgruppe: 'normal',
+            rahmenvertrag: 'keiner',
+            versBeginn: '25.02.2016',
+            zahlungsweise: 'monatlich',
+
+        }
+    };
+
+
     res.send(vertrag);
 });
 
 app.get('/schaden/kraftfahrt/vorbelegung', function (req, res) {
-    var vorbelegung = {};
+
+    // Richtig ohne Aufbereitung ? Macht das Frontende das ?
+    var date = new Date().toISOString();
+
+
+    var vorbelegung = {
+        meldungAm:date,
+        schadenOrt:'Deutschland'
+
+    };
     res.send(vorbelegung);
 });
 
@@ -244,7 +304,52 @@ app.get('/briefkasten/:userid', function (req, res) {
 });
 
 app.get('/vertrag/987654321', function (req, res) {
-    var vertrag = {};//TODO
+    // ähnlich einem angebot.
+    var vertrag = {
+        vsnr:987654321,
+        fahrzeugdaten: {
+            fahrzeugart: 'LKW',
+            kennzeichen: 'ST-CP 444',
+            hsn: 422,
+            typschl: 154,
+            erstzulassung: '01.04.2011',
+            fahrgestell: 'dj3radaedi42',
+            fahrzeugstaerkePS: 450,
+            austauschmotor: true,
+            kennzeichenart: 'gruenes Kennzeichen',
+            wechselkennzeichen: false
+        },
+        vorschaeden:
+            [
+                {datum:'01.07.2012',schadenhoehe:10500}
+            ]
+
+        ,
+        vorversicherer:[
+            []
+
+        ],
+        nutzung: {
+            beliebigeFahrer: 'ja',
+            nachtAbstellplatz: 'Garage',
+            fahrleistungKm: 130000,
+            kilometerstand: 204330,
+            abweichenderFahrzeughalter: false,
+            nutzung: 'gewerblich',
+            selbstGenEigentum: true,
+            wohneigentumart: 'Wohnung'
+
+        },
+        versSchutz: {
+            haftpflichSFR: 'SF0 10%',
+            volkaskoSFR: 'SF0 57%',
+            tarifgruppe: 'normal',
+            rahmenvertrag: 'keiner',
+            versBeginn: '01.04.2011',
+            zahlungsweise: 'monatlich',
+
+        }
+    };
     res.send(vertrag);
 });
 
