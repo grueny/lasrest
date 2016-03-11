@@ -1,266 +1,213 @@
+(function () {
     'use strict';
 
-const express = require('express'),
-    app = express(),
-    cors = require('cors'),
-    port = process.env.PORT || 8080,
-    server = `localhost:${port}`;
+    const express = require('express'),
+        app = express(),
+        cors = require('cors'),
+        port = process.env.PORT || 8080,
+        server = process.env.LVM_PUBLIC_URL || `http://localhost:${port}`,
+        PartnerController = require('./controllers/partner'),
+        AngeboteController = require('./controllers/angebote'),
+        AntraegeController = require('./controllers/antraege'),
+        BerufeController = require('./controllers/berufe'),
+        VertraegeController = require('./controllers/vertraege'),
+        BriefkastenController = require('./controllers/briefkasten');
 
-app.use(cors());
+    var partnerController = new PartnerController(server),
+        vertraegeController = new VertraegeController(server),
+        angeboteController = new AngeboteController(server),
+        antraegeController = new AntraegeController(server),
+        briefkastenController = new BriefkastenController(server),
+        berufeController = new BerufeController(server);
 
-app.get('/', function (req, res) {
-    res.send(`<html><body>
-    <h2 Mögliche URLs</h2>
-    <ul>
-      <li><a href="/partner?q=Produkt">Partnersuche</a></li>
-      <li><a href="/partner/4711">Konkrete Partner Informationen</a></li>
-      <li><a href="/partner/4711/haushalt">Haushalt Informationen</a></li>
-      <li><a href="/partner/4711/kontakt">Kontakt Informationen</a></li>
-      <li><a href="/angebote?partnerId=4711&mode=header">Angebote zu einem Kunden</a></li>
-      <li><a href="/antraege?partnerId=4711&mode=header">Anträge zu einem Kunden</a></li>
-      <li><a href="/vertraege?partnerId=4711&mode=header">Verträge zu einem Kunden</a></li>
-      <li><form action="http://${server}/angebot/kraftfahrt/berechnen" method="post"><button type="submit">Kraftfahrt berechnen</button></form></li>
-      <li><form action="http://${server}/berufe" method="GET"><input type="text" name="q"/><button type="submit">Berufe auswählen</button></form></li>
-      <li><form action="http://${server}/angebot" method="POST"><button type="submit">Angebot speichern</button></form></li>
-      <li><form action="http://${server}/angebot" method="POST"><input type="text" name="angebotId"/><button type="submit">Angebot kopieren</button></form></li>
-      <li><a href="/vertrag/123456789">Vertrag 123456789 anzeigen</a></li>
-      <li><a href="/schaden/kraftfahrt/vorbelegung">Kraftfahrtvorbelegung</a></li>
-      <li><a href="briefkasten/m50000">Briefkasten für m50000</a></li>
-      <li><a href="/vertrag/987654321">Vertrag 987654321</a></li>
-      <li><a href="/brief/vorlagen">Briefvorlagen</a></li>
-      <li><a href="/brief/empfaenger">Briefempfänger</li>    
-    </ul>
-    </body>    </html>
-    `);
+    // middlewares
+    app.use(cors());
+    app.use(function (req, res, next) {
+        setTimeout(function () {
+            next();
+        }, 100);
+    });
 
+    app.use(function (req, res, next) {
+        console.log(`${req.method}: ${req.url}`);
+        next();
+    });
 
-});
-var partners = [{
-    partnerId: 4711,
-    partnerURI: `http://${server}/partner/4711`,
-    anrede: 'Herr',
-    name: 'Produkt, Peter',
-    geburtsdatum: '',
-    anschrift: 'Lindenstr. 11, 48362 Münster',
-    status: 'Kunde'
-},
-    {
-        partnerId: 4712,
-        partnerURI: `http://${server}/partner/4713`,
-        anrede: 'Herr',
-        name: 'Produkt, Hans',
-        geburtsdatum: '15.05.1958',
-        anschrift: 'Hauptstr. 13, 45353 Osnabrück',
-        status: 'Kunde'
-    },
-    {
-        partnerId: 4713,
-        partnerURI: `http://${server}/partner/4712`,
-        anrede: 'Herr',
-        name: 'Produkt, Grünther',
-        geburtsdatum: '20.10.1967',
-        anschrift: 'Friedrich-Str 60, 43282 Dortmund',
-        status: 'Interessent'
-    }];
-// Partnerübersicht, in der Partnersuche
-app.get('/partner', function (req, res) {
-    res.send(partners);
-
-});
-// PartnerDetails
-app.get('/partner/:id', function (req, res) {
-    //TODO zwei unterschiedliche Partner herausgeben
-    var partnerDetails = [{
-            partnerId: 4711,
-            partnerURI: `http://${server}/partner/4711`,
-            anrede: 'Herr',
-            name: 'Produkt',
-            vorname: 'Peter',
-            geburtsdatum: '',
-            alter: -1,
-            staatsang: 'deutsch',
-            familienstand: 'verheiratet',
-            anzahlKinder: 2,
-            telnummer: '0173 34324525',
-            beruf: 'Kindergärtner',
-            anschrift: {strasse: 'Lindenstr. 11', plz: '48362', ort: 'Münster', stadtteil: 'Aaseestadt'},
-            status: 'Kunde'
-        },
-            {
-                partnerId: 4712,
-                partnerURI: `http://${server}/partner/4713`,
-                anrede: 'Herr',
-                name: 'Produkt',
-                vorname: 'Hans',
-                geburtsdatum: '15.05.1958',
-                alter: 58,
-                staatsang: 'deutsch',
-                familienstand: 'ledig',
-                anzahlKinder: 0,
-                telnummer: '0362 63636525',
-                beruf: 'Polizist',
-                anschrift: {strasse: 'Hauptstr. 13', plz: '45353', ort: 'Osnabrück', stadtteil: 'Stadtzentrum'},
-                status: 'Kunde'
-            }
-        ]
-        ;
-    var found = partnerDetails.filter((p) => p.partnerId === parseInt(req.params.id))[0];
-    if (found)
-        res.send(found);
-    else
-        res.status(404).end();
-});
-// Haushaltsdaten für Kundenübersicht
-app.get('/partner/:id/haushalt', function (req, res) {
-    var haushalt = [{beziehung: 'Frau', name: 'Produkt', vorname: 'Petra', geburtsdatum:'23.04.1974 45J'},
-        {beziehung: 'Lebensgefährte', name: 'Herr Klaus Produkt', geburtsdatum: '30.04.1976 39J'}];
-    res.send(haushalt);
-
-});
-// Kontaktdaten für Kundenübersicht
-app.get('/partner/:id/kontakt', function (req, res) {
-    var kontakt = [{kontaktart: 'Telefon', zeit: '2016-01-15 12:30', titel: 'Beratung'},
-        {kontaktart: 'Email', zeit: '2016-01-15 12:40', titel: 'Unterlagen', sachbearbeiter: 'Jutta Jansen'}];
-    res.send(kontakt);
-});
-// Angebotsdaten für Kundenübersicht
-app.get('/angebote', function (req, res) {
-    var angebote = [{
-        sparte: 'Kraftfahrt',
-        rolle: 'Versicherungsnehmer',
-        agentur: '2008/21',
-        versichertist: 'MS-TT 223',
-        schaeden: 1,
-        ablauf: '',
-        zahlungsweise: 'jährlich',
-        beitragZent: 10000,
-        angebotURI: `http://${server}/angebot/4711`
-    }];
-    res.send(angebote);
-});
-// Antragsdaten für Kundenübersicht
-app.get('/antraege', function (req, res) {
-    var angebote = [{sparte: 'Kraftfahrt', beitragZent: 12001, antragURI: `http://${server}/antrag/4712`}];//TODO
-    res.send(angebote);
-});
-// Vertragsdaten für Kundenübersicht
-app.get('/vertraege', function (req, res) {
-    var angebote = [{sparte: 'Kraftfahrt', beitragZent: 13000, vertragURI: `http://${server}/vertrag/4713`}];//TODO
-    res.send(angebote);
-});
-// Vorbelegung zum K-Angebot
-app.get('/angebot/kraftfahrt/vorbelegung', function (req, res) {
-    var vorbelegung = {geburtsdatum: '30.04.1945', anschrift: {}};//TODO
-    res.send(vorbelegung);
-});
-// Angebot berechnen
-app.post('/angebot/kraftfahrt/berechnen', function (req, res) {
-    res.redirect('/angebot/kraftfahrt/berechnetesAngebot/4711');
-});
-//Fehler wird zurückgegeben
-app.get('/angebot/kraftfahrt/berechnetesAngebot/:id', function (req, res) {
-    var fehler = [
-        {fehlerkategorie: "Fehler", fehlertext: 'Es ist noch kein Beruf angegeben', fehlerfeld: 'beruf'},
-        {
-            fehlerkategorie: 'Fehler',
-            fehlertext: 'Es ist keine Zahlungsweise angegeben',
-            fehlerfeld: 'zahlungsweise'
-        }];
-    res.send(fehler);
-});
-// Auswahl des Berufe-Dialogs /berufe?q=...
-app.get('/berufe', function (req, res) {
-    var berufe = [{beruf: 'Informatiker'}, {beruf: 'Wirtschaftsinformatiker'}];
-    res.send(berufe);
-});
-// Angebot speichern
-app.post('/angebot', function (req, res) {
-    //theoretisch speichern
-    res.redirect('/'); //TODO 200 zurüc ohne content
-});
-//
-app.post('/angebot?angebotId=4711', function (req, res) {
-    //theoretisch antrag 4711 kopieren in 4712
-    res.redirect('/angebot/4712');
-});
-
-app.get('/angebot/4712', function (req, res) {
-    var angebot = {
-        fahrzeugdaten: {
-            fahrzeugart: 'PKW',
-            kennzeichen: 'MS-CH 444',
-            hsn: 432,
-            typschl: 234,
-            erstzulassung: '20.05.2015',
-            fahrgestell: 'dj3rij35j42',
-            fahrzeugstaerkePS: 340,
-            austauschmotor: false,
-            kennzeichenart: 'schwarzes Kennzeichen',
-            wechselkennzeichen: false
-        },
-        nutzung: {
-            beliebigeFahrer: 'unbekannt',
-            nachtAbstellplatz: 'Straßenrand',
-            fahrleistungKm: 30000,
-            kilometerstand: 120433,
-            abweichenderFahrzeughalter: false,
-            nutzung: 'privat',
-            selbstGenEigentum: true,
-            wohneigentumart: 'Wohnung'
-
-        },
-        versSchutz: {
-            haftpflichSFR: 'SF0 10%',
-            volkaskoSFR: 'SF0 57%',
-            tarifgruppe: 'normal',
-            rahmenvertrag: 'keiner',
-            versBeginn: '25.02.2016',
-            zahlungsweise: 'monatlich',
-
+    // private helpers
+    const getItemByIdHelper = function getItemByIdHelper(req, res, next, controller) {
+        var id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
         }
-    };//TODO komplettes Angebot (vorschäden, dokumentation, vorverträge)?
-    res.send(angebot);
-});
+        if (!controller.hasItemWithId(id)) {
+            res.status(404).send('item not found');
+            return next();
+        }
+        res.status(200).send(controller.getById(id));
+    }
 
-app.get('/vertrag/123456789', function (req, res) {
-    var vertrag = {};//TODO
-    res.send(vertrag);
-});
+    // SEARCH
+    app.get('/search/partner/:query', function (req, res, next) {
+        var query = req.params.query;
+        if (!query) {
+            res.status(400).send('No query provided');
+            return next();
+        }
+        res.status(200).send(partnerController.search(query));
+    });
 
-app.get('/schaden/kraftfahrt/vorbelegung', function (req, res) {
-    var vorbelegung = {};
-    res.send(vorbelegung);
-});
-
-app.get('/briefkasten/:userid', function (req, res) {
-    var briefkasten = [{
-        datum: '16.03.2015',
-        text: 'Wiedervorlage',
-        bezugText: 'Vers 987654321',
-        bezugsURI: `http://${server}/vertrag/987654321`
-    },
-        {datum: '20.03.2015', text: 'UB-Vorlage', bezugText: ''}];//TODO
-    res.send(briefkasten);
-});
-
-app.get('/vertrag/987654321', function (req, res) {
-    var vertrag = {};//TODO
-    res.send(vertrag);
-});
+    app.get('/search/berufe/:query', function (req, res, next) {
+        var query = req.params.query;
+        if (!query) {
+            res.status(400).send('No query provided');
+            return next();
+        }
+        res.status(200).send(berufeController.search(query));
+    });
 
 
-app.get('/brief/vorlagen', function (req, res) {
-    var dokumentarten = {};//TODO
-    res.send(dokumentarten);
-});
+    // PARTNER
+    app.get('/partner', function (req, res) {
+        res.status(200).send(partnerController.getOverview());
+    });
 
-app.get('/brief/empfaenger', function (req, res) {
-    var empfanaenger = {};//TODO
-    res.send(empfanaenger);
-});
+    app.get('/partner/:id', function (req, res, next) {
+        getItemByIdHelper(req, res, next, partnerController);
+    });
+
+    app.get('/partner/:id/haushalt', function (req, res, next) {
+        var id = parseInt(req.params.id);
+        if (isNaN(id) || !partnerController.hasItemWithId(id)) {
+            res.status(404).send('partner not found');
+            return next();
+        }
+        res.status(200).send(partnerController.getHaushalt(id));
+
+    });
+
+    app.get('/partner/:id/kontakt', function (req, res, next) {
+        var id = parseInt(req.params.id);
+        if (isNaN(id) || !partnerController.hasItemWithId(id)) {
+            res.status(404).send('partner not found');
+            return next();
+        }
+        res.status(200).send(partnerController.getKontaktdaten(id));
+    });
+
+    // BERUFE
+    app.get('/berufe', function (req, res) {
+        res.status(200).send(berufeController.getAll());
+    });
+
+    app.get('/berufe/:id', function (req, res, next) {
+        getItemByIdHelper(req, res, next, berufeController);
+    });
+
+    // ANGEBOTE
+    app.get('/angebote', function (req, res) {
+        res.status(200).send(angeboteController.getAll());
+    });
+
+    app.get('/angebote/:id', function (req, res, next) {
+        getItemByIdHelper(req, res, next, angeboteController);
+    });
+
+    app.post('/angebote/calculate/kraftfahrt', function (req, res) {
+        setTimeout(function () {
+            res.status(200).send(angeboteController.getById(5799));
+        }, 290);
+    });
+    app.post('/angebote/calculate/leben', function (req, res) {
+        setTimeout(function () {
+            res.status(400).send([
+                { fehlerkategorie: "Fehler", fehlertext: 'Es ist noch kein Beruf angegeben', fehlerfeld: 'beruf' },
+                {
+                    fehlerkategorie: 'Fehler',
+                    fehlertext: 'Es ist keine Zahlungsweise angegeben',
+                    fehlerfeld: 'zahlungsweise'
+                }]);
+        }, 290);
+    });
+
+    app.post('/angebote', function (req, res, next) {
+        //todo: implement this
+        var newAngebot = {};
+        res.send(201).send(newAngebot);
+    });
+
+    // ANTRAEGE
+    app.get('/antraege', function (req, res, next) {
+        //todo: implement antraege corresponding to angebote...
+        res.status(200).send(antraegeController.getAll());
+    });
+
+    app.get('/antraege/:id', function (req, res, next) {
+        getItemByIdHelper(req, res, next, antraegeController);
+    })
+
+    app.post('/antraege/from/angebot/:angebotId', function (req, res, next) {
+        //todo: erstelle antrag von angebot mit angebotId
+        var newAntrag = {};
+        res.status(201).send(newAntrag);
+    });
+
+    // VERTRAEGE
+    app.get('/vertraege', function (req, res, next) {
+        //todo: implement vertraege corrseponding to angebote...
+        res.status(200).send(vertraegeController.getAll());
+    });
+
+    app.get('/vertraege/:id', function (req, res, next) {
+        getItemByIdHelper(req, res, next, vertraegeController);
+    });
+
+    // DEFAULTS
+    app.get('/defaults/angebote/kraftfahrt', function (req, res, next) {
+        //todo: implement
+        var defaults = { geburtsdatum: '30.04.1945', anschrift: {} };//TODO
+        res.status(200).send(defaults);
+    });
+
+    app.get('/defaults/schaden/kraftfahrt', function (req, res, next) {
+        //todo: implement
+        var defaults = {};
+        res.status(200).send(defaults);
+    });
 
 
-app.listen(port, () => {
-    console.log(`server running on port ${port} (http://${server})`);
+    // BRIEFKASTEN
+    app.get('/briefkasten/:userId/', function (req, res, next) {
+
+        res.status(200).send(briefkastenController.getAll());
+    });
+
+    app.get('/briefkasten/:userid/:id', function (req, res, next) {
+        getItemByIdHelper(req, res, next, briefkastenController);
+    });
+
+    app.post('/briefkasten/:userId', function (req, res, next) {
+        //todo: implement
+        var newBriefkastenEntry = {};
+        res.status(201).send(newBriefkastenEntry);
+    });
+
+
+    app.get('/brief/vorlagen', function (req, res, next) {
+        //todo: implement this
+        var dokumentarten = {};
+        res.status(200).send(dokumentarten);
+    });
+
+    app.get('/brief/empfaenger', function (req, res, next) {
+        //todo: implement this
+        var empfanaenger = {};
+        res.status(200).send(empfanaenger);
+    });
+
+    app.listen(port, () => {
+        console.log(`server running on port ${port} (http://${server})`);
 })
-;
+    ;
+
+})();
