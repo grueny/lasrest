@@ -4,55 +4,78 @@ REST-Services-Mockups
 ## Search API
 
 `GET: /search/partner/:query`
+
 `GET: /search/berufe/:query`
 
 
 ## Partner API
 
 `GET: /partner`
+
 `GET: /partner/:id`
+
 `GET: /partner/:id/haushalt`
+
 `GET: /partner/:id/kontakt`
 
 
 ## Berufe API
+
 `GET: /berufe`
+
 `GET: /berufe/:id`
 
 
 ## Angebote API
 
 `GET:  /angebote`
+
 `GET:  /angebote/:id`
+
 `POST: /angebote/calculate/kraftfahrt`
+
 `POST: /angebote/calculate/leben`
+
 `POST: /angebote`
+
 
 ## Antrags API
 
 `GET:  /antraege`
+
 `GET:  /antraege/:id`
+
 `POST: /antraege/from/angebot/:angebotId`
+
 
 ## Vertrags API
 
 `GET /vertraege`
+
 `GET /vertraege/:id`
+
 
 ## Default Values API
 
 `GET /defaults/angebote/kraftfahrt`
+
 `GET /defaults/schaden/kraftfahrt`
+
 
 ## Briefkasten API
 
- `GET  /briefkasten/:userId/`
- `GET  /briefkasten/:userid/:id`
- `POST /briefkasten/:userId`
+`GET  /briefkasten/:userId/`
+
+`GET  /briefkasten/:userid/:id`
+
+`POST /briefkasten/:userId`
+
 
 ## Briefe API
- `GET  /briefe/vorlagen`
- `GET  /briefe/empfaenger`
+
+`GET  /briefe/vorlagen`
+
+`GET  /briefe/empfaenger`
 
 
 
