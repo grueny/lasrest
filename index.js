@@ -167,6 +167,9 @@
         //todo: implement
         var defaults = { customer: {
             name: 'Max',
+            schaeden: 0,
+            zahlungsweise: 'jährlich',
+            versichertist: 'B-AU 1234',
             vorname: 'Mustermann',
             geburtsdatum: '01.01.1983',
             anschrift:{
