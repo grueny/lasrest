@@ -165,7 +165,16 @@
     // DEFAULTS
     app.get('/defaults/angebote/kraftfahrt', function (req, res, next) {
         //todo: implement
-        var defaults = { geburtsdatum: '30.04.1945', anschrift: {} };//TODO
+        var defaults = { customer: {
+            name: 'Max',
+            vorname: 'Mustermann',
+            geburtsdatum: '01.01.1983',
+            anschrift:{
+                strasse: '',
+                plz: '01234',
+                ort: 'Berlin'
+            }
+        }};//TODO
         res.status(200).send(defaults);
     });
 
