@@ -165,18 +165,19 @@
     // DEFAULTS
     app.get('/defaults/angebote/kraftfahrt', function (req, res, next) {
         //todo: implement
-        var defaults = { customer: {
-            name: 'Max',
+        var defaults = {
             schaeden: 0,
             zahlungsweise: 'jährlich',
             versichertist: 'B-AU 1234',
-            vorname: 'Mustermann',
-            geburtsdatum: '01.01.1983',
-            anschrift:{
-                strasse: '',
-                plz: '01234',
-                ort: 'Berlin'
-            }
+            customer: {
+                name: 'Max',
+                vorname: 'Mustermann',
+                geburtsdatum: '01.01.1983',
+                anschrift:{
+                    strasse: '',
+                    plz: '01234',
+                    ort: 'Berlin'
+                }
         }};//TODO
         res.status(200).send(defaults);
     });
