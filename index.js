@@ -364,8 +364,10 @@ app.get('/brief/empfaenger', function (req, res) {
     res.send(empfanaenger);
 });
 
+module.exports = app;
 
-app.listen(port, () => {
-    console.log(`server running on port ${port} (http://${server})`);
-})
-;
+if (module.parent === null) {
+  app.listen(port, () => {
+      console.log(`server running on port ${port} (http://${server})`);
+  });
+}
