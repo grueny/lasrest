@@ -192,14 +192,14 @@
         res.status(201).send(newBriefkastenEntry);
     });
 
-
-    app.get('/brief/vorlagen', function (req, res, next) {
+    // BRIEFE
+    app.get('/briefe/vorlagen', function (req, res, next) {
         //todo: implement this
         var dokumentarten = {};
         res.status(200).send(dokumentarten);
     });
 
-    app.get('/brief/empfaenger', function (req, res, next) {
+    app.get('/briefe/empfaenger', function (req, res, next) {
         //todo: implement this
         var empfanaenger = {};
         res.status(200).send(empfanaenger);
