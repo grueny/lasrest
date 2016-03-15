@@ -206,9 +206,11 @@
     });
 
     module.exports = app;
-    if (module.parent === null) {
+
+    if (module.parent === null || module.parent.filename.indexOf('server.js') > -1) {
         app.listen(port, () => {
             console.log(`server running on port ${port} (http://${server})`);
-        });
+    })
+        ;
     }
 })();
