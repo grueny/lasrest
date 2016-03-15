@@ -206,9 +206,9 @@
     });
 
     module.exports = app;
-
-if (module.parent === null) {
-  app.listen(port, () => {
-      console.log(`server running on port ${port} (http://${server})`);
-  });
-}
+    if (module.parent === null) {
+        app.listen(port, () => {
+            console.log(`server running on port ${port} (http://${server})`);
+        });
+    }
+})();
