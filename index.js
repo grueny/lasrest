@@ -27,8 +27,7 @@ app.use(function (req, res, next) {
 
 
 app.get('/partners', partnerController.list);
-
-
+app.get('/partner/:id', partnerController.get);
 
 
 

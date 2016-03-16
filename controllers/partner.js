@@ -23,6 +23,24 @@ function Partner(opts) {
 
         res.json(200, result);
     };
+
+    this.get = (req, res, next) => {
+        const id = parseInt(req.params.id, 10);
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        let result = partnerRepository.find(p => p.partnerId === id);
+
+        if (!result) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        res.json(200, result);
+    };
 }
 
 module.exports = Partner;
