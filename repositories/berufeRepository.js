@@ -4,7 +4,7 @@
  * @public
  * @constructor
  */
-function AngeboteRepository(server) {
+function BerufeRepository(server) {
     return [
         { berufId: 1, name: 'Kindergärtner' },
         { berufId: 2, name: 'Informatiker' },
@@ -28,4 +28,4 @@ function AngeboteRepository(server) {
     ];
 }
 
-module.exports = AngeboteRepository;
+module.exports = BerufeRepository;
