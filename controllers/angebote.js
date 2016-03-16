@@ -80,7 +80,7 @@ function AngeboteController(opts) {
         let partner = partnerRepository.find(p => p.partnerId === id);
 
         if (!partner) {
-            res.status(404).send('item not found');
+            res.status(404).send('partner not found');
             return next();
         }
 
