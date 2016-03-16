@@ -115,13 +115,39 @@ function AngeboteController(opts) {
             return next();
         }
 
-        angebot.angebotId = angeboteRepository.length + 1;
-        angebot.angebotURI = `${server}/angebot/${angebot.angebotId}`;
-
-        angeboteRepository.push(req.body);
+        addAngebotId(angebot);
+        angeboteRepository.push(angebot);
 
         res.status(201).json(angebot);
     };
+
+    this.copy = (req, res, next) => {
+        const angebotId = parseInt(req.query.angebotId, 10);
+
+        if (isNaN(angebotId)) {
+            res.status(400).send('bad request, angebotId should be an integer');
+            return next();
+        }
+
+        const angebot = angeboteRepository.find(p => p.angebotId === angebotId);
+
+        if (!angebot) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        const copiedAngebot = JSON.parse(JSON.stringify(angebot));
+
+        addAngebotId(copiedAngebot);
+        angeboteRepository.push(copiedAngebot);
+
+        res.status(201).json(copiedAngebot);
+    };
+
+    function addAngebotId(angebot) {
+        angebot.angebotId = angeboteRepository.length + 1;
+        angebot.angebotURI = `${server}/angebot/${angebot.angebotId}`;
+    }
     
     this.berechnen = (req, res) => {
         const sparte = req.params.sparte || '';
