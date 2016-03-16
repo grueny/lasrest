@@ -203,18 +203,6 @@ function AngeboteController(opts) {
 
         return result;
     }
-
-    /*{
-        fehler: [
-            {
-                fehlerId: 123,
-                fehlerkategory: 0 // "error", "info", "warning"
-                fehlerText: "Bitte beantworten Sie die Gesundheitsfrage",
-                bezugsFeld: "Property vom Datenmodell, dass zum Fehler geführt hat"
-                // "person.vorname"
-            }
-        ]
-    }*/
 }
 
 module.exports = AngeboteController;
