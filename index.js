@@ -59,6 +59,8 @@ app.get('/antraege', antraegeController.getListOrCount);
 // Verträge
 app.get('/vertraege', vertraegeController.getListOrCount);
 app.get('/vertrag/:id', vertraegeController.get);
+app.get('/vertrag/:id/briefvorlagen', vertraegeController.getBriefvorlagen);
+app.get('/vertrag/:id/briefempfaenger', vertraegeController.getBriefempfaenger);
 
 // Berufe
 app.get('/berufe', berufeController.list);
