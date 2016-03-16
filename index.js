@@ -9,10 +9,12 @@ const express = require('express'),
 const repositories = require('./repositories')(server);
 
 const PartnerController = require('./controllers/partner'),
-    AngeboteController = require('./controllers/angebote');
+    AngeboteController = require('./controllers/angebote'),
+    AntraegeController = require('./controllers/antraege');
 
 const partnerController = new PartnerController(repositories),
-    angeboteController = new AngeboteController(repositories);
+    angeboteController = new AngeboteController(repositories),
+    antraegeController = new AntraegeController(repositories);
 
 // middlewares
 app.use(cors());
@@ -36,6 +38,9 @@ app.get('/partner/:id/kontakt', partnerController.getKontakte);
 // Angebote
 app.get('/angebote', angeboteController.getListOrCount);
 app.get('/angebot/:id', angeboteController.get);
+
+// Antraege
+app.get('/antraege', antraegeController.getListOrCount);
 
 module.exports = app;
 
