@@ -6,6 +6,7 @@ const PartnerRepository = require('./partnerRepository'),
     AntraegeRepository = require('./antraegeRepository'),
     VertraegeRepository = require('./vertraegeRepository'),
     BerufeRepository = require('./berufeRepository'),
+    BriefkastenRepository = require('./briefkastenRepository'),
     KontakthistorieRepository = require('./kontakthistorieRepository');
 
 module.exports = function (server) {
@@ -16,6 +17,7 @@ module.exports = function (server) {
         antraegeRepository: new AntraegeRepository(server),
         vertraegeRepository: new VertraegeRepository(server),
         berufeRepository: new BerufeRepository(server),
+        briefkastenRepository: new BriefkastenRepository(server),
         kontakthistorieRepository: new KontakthistorieRepository(server),
         server: server
     };

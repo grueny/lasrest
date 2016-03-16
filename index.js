@@ -14,6 +14,7 @@ const PartnerController = require('./controllers/partner'),
     VertraegeController = require('./controllers/vertraege'),
     BerufeController = require('./controllers/berufe'),
     SchadenController = require('./controllers/schaden'),
+    BriefkastenController = require('./controllers/briefkasten'),
     AntraegeController = require('./controllers/antraege');
 
 const partnerController = new PartnerController(repositories),
@@ -21,6 +22,7 @@ const partnerController = new PartnerController(repositories),
     vertraegeController = new VertraegeController(repositories),
     berufeController = new BerufeController(repositories),
     schadenController = new SchadenController(repositories),
+    briefkastenController = new BriefkastenController(repositories),
     antraegeController = new AntraegeController(repositories);
 
 // middlewares
@@ -64,6 +66,9 @@ app.get('/berufe', berufeController.list);
 // Schäden
 app.get('/schaden/:sparte/vorbelegung', schadenController.getVorbelegung);
 app.post('/schaden', schadenController.create);
+
+// Briefkasten
+app.get('/briefkasten/:id', briefkastenController.list);
 
 module.exports = app;
 
