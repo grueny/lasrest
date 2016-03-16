@@ -42,6 +42,24 @@ function AngeboteController(opts) {
             });
         }
     };
+
+    this.get = (req, res, next) => {
+        const id = parseInt(req.params.id, 10);
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        let result = angeboteRepository.find(p => p.angebotId === id);
+
+        if (!result) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        res.status(200).json(result);
+    };
 }
 
 module.exports = AngeboteController;

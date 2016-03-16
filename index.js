@@ -35,6 +35,7 @@ app.get('/partner/:id/kontakt', partnerController.getKontakte);
 
 // Angebote
 app.get('/angebote', angeboteController.getListOrCount);
+app.get('/angebot/:id', angeboteController.get);
 
 module.exports = app;
 
