@@ -4,7 +4,7 @@
  * @public
  * @constructor
  */
-function Partner(opts) {
+function PartnerController(opts) {
     const partnerRepository = opts.partnerRepository;
     const haushaltRepository = opts.haushaltRepository;
     const kontakthistorieRepository = opts.kontakthistorieRepository;
@@ -72,4 +72,4 @@ function Partner(opts) {
     };
 }
 
-module.exports = Partner;
+module.exports = PartnerController;
