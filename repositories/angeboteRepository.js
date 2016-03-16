@@ -8,9 +8,19 @@ function AngeboteRepository(server) {
     let currentId = 0;
 
     function generateData() {
+        const angebotId = currentId++;
         return {
-            angebotId: currentId++,
+            angebotId: angebotId,
             partnerId: 4711 + (currentId % 15),
+            angebotURI: `${server}/angebote/` + angebotId,
+            sparte: 'Kraftfahrt',
+            rolle: 'Versicherungsnehmer',
+            agentur: '2008/21',
+            versichertist: 'M-RS 6',
+            schaeden: 0,
+            ablauf: '',
+            zahlungsweise: 'jährlich',
+            beitragZent: 9999,
             fahrzeugdaten: {
                 fahrzeugart: 'PKW',
                 kennzeichen: 'MS-CH 444',

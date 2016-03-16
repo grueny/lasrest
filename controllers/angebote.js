@@ -16,7 +16,22 @@ function AngeboteController(opts) {
         }
 
         const mode = req.query.mode || 'list';
-        const items = angeboteRepository.filter(p => p.partnerId === partnerId);
+        const items = angeboteRepository.filter(p => p.partnerId === partnerId)
+            .map(p => {
+                return {
+                    angebotId: p.angebotId,
+                    partnerId: p.partnerId,
+                    sparte: p.sparte,
+                    rolle: p.rolle,
+                    agentur: p.agentur,
+                    versichertist: p.versichertist,
+                    schaeden: p.schaeden,
+                    ablauf: p.ablauf,
+                    zahlungsweise: p.zahlungsweise,
+                    beitragZent: p.beitragZent,
+                    angebotURI: p.angebotURI
+                };
+            });
 
         if (mode === 'list') {
             return res.status(200).json(items);
