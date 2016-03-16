@@ -6,7 +6,8 @@
  */
 function Partner(opts) {
     const partnerRepository = opts.partnerRepository;
-    
+    const haushaltRepository = opts.haushaltRepository;
+
     this.list = (req, res) => {
         let result = partnerRepository;
 
@@ -39,6 +40,19 @@ function Partner(opts) {
             res.status(404).send('item not found');
             return next();
         }
+
+        res.status(200).json(result);
+    };
+
+    this.getHaushalt = (req, res) => {
+        const id = parseInt(req.params.id, 10);
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        let result = haushaltRepository.filter(p => p.partnerId === id);
 
         res.status(200).json(result);
     };
