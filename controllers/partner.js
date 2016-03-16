@@ -15,13 +15,14 @@ function Partner(opts) {
             query = query.toLowerCase();
 
             result = result.filter(partner => {
-                return partner.name.toLowerCase().indexOf(query) > -1
-                    || partner.vorname.toLowerCase().indexOf(query) > -1
-                    || partner.partnerId.toString().indexOf(query) > -1
+                const name = partner.vorname.toLowerCase() + ' ' + partner.name.toLowerCase();
+
+                return name.indexOf(query) > -1
+                    || partner.partnerId.toString().indexOf(query) > -1;
             });
         }
 
-        res.json(200, result);
+        res.status(200).json(result);
     };
 
     this.get = (req, res, next) => {
@@ -39,7 +40,7 @@ function Partner(opts) {
             return next();
         }
 
-        res.json(200, result);
+        res.status(200).json(result);
     };
 }
 
