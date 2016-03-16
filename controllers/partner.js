@@ -7,6 +7,7 @@
 function Partner(opts) {
     const partnerRepository = opts.partnerRepository;
     const haushaltRepository = opts.haushaltRepository;
+    const kontakthistorieRepository = opts.kontakthistorieRepository;
 
     this.list = (req, res) => {
         let result = partnerRepository;
@@ -53,6 +54,19 @@ function Partner(opts) {
         }
 
         let result = haushaltRepository.filter(p => p.partnerId === id);
+
+        res.status(200).json(result);
+    };
+    
+    this.getKontakte = (req, res) => {
+        const id = parseInt(req.params.id, 10);
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        let result = kontakthistorieRepository.filter(p => p.partnerId === id);
 
         res.status(200).json(result);
     };

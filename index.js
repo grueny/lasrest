@@ -29,9 +29,7 @@ app.use(function (req, res, next) {
 app.get('/partners', partnerController.list);
 app.get('/partner/:id', partnerController.get);
 app.get('/partner/:id/haushalt', partnerController.getHaushalt);
-
-
-
+app.get('/partner/:id/kontakt', partnerController.getKontakte);
 
 module.exports = app;
 
