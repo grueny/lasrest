@@ -40,32 +40,40 @@ app.use(function (req, res, next) {
 });
 
 // Partner
+// Query Parameter: q=Suchbegriff
 app.get('/partners', partnerController.list);
 app.get('/partner/:id', partnerController.get);
 app.get('/partner/:id/haushalt', partnerController.getHaushalt);
 app.get('/partner/:id/kontakt', partnerController.getKontakte);
 
 // Angebote
+// Query Parameter: partnerId=partnerId&mode=(list|count)
 app.get('/angebote', angeboteController.getListOrCount);
 app.get('/angebot/:id', angeboteController.get);
+
+// Query Parameter: partnerId=partnerId
 app.get('/angebot/:sparte/vorbelegung', angeboteController.getVorbelegung);
 app.post('/angebot/:sparte/berechnen', angeboteController.berechnen);
 app.post('/angebot', angeboteController.create);
 app.post('/angebot/:id', angeboteController.copy);
 
 // Antraege
+// Query Parameter: partnerId=partnerId&mode=(list|count)
 app.get('/antraege', antraegeController.getListOrCount);
 
 // Verträge
+// Query Parameter: partnerId=partnerId&mode=(list|count)
 app.get('/vertraege', vertraegeController.getListOrCount);
 app.get('/vertrag/:id', vertraegeController.get);
 app.get('/vertrag/:id/briefvorlagen', vertraegeController.getBriefvorlagen);
 app.get('/vertrag/:id/briefempfaenger', vertraegeController.getBriefempfaenger);
 
 // Berufe
+// Query Parameter: q=Suchbegriff
 app.get('/berufe', berufeController.list);
 
 // Schäden
+// Query Parameter: partnerId=partner&vertragsId=vertragId
 app.get('/schaden/:sparte/vorbelegung', schadenController.getVorbelegung);
 app.post('/schaden', schadenController.create);
 
