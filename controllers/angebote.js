@@ -6,6 +6,7 @@
  */
 function AngeboteController(opts) {
     const angeboteRepository = opts.angeboteRepository;
+    const partnerRepository = opts.partnerRepository;
 
     this.getListOrCount = (req, res, next) => {
         const partnerId = parseInt(req.query.partnerId, 10);
@@ -57,6 +58,45 @@ function AngeboteController(opts) {
             res.status(404).send('item not found');
             return next();
         }
+
+        res.status(200).json(result);
+    };
+
+    this.getVorbelegung = (req, res, next) => {
+        const id = parseInt(req.query.partnerId, 10);
+        const sparte = req.params.sparte || '';
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        if (sparte.toLowerCase() !== 'kraftfahrt') {
+            res.status(400).send('bad request, sparte is invalid');
+            return next();
+        }
+
+        let partner = partnerRepository.find(p => p.partnerId === id);
+
+        if (!partner) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        const result = {
+            geburtsdatum: partner.geburtsdatum,
+            anschrift: partner.anschrift,
+            zahlungsweise: [
+                {
+                    id: 1,
+                    name: 'monatlich'
+                },
+                {
+                    id: 2,
+                    name: 'jährlich'
+                }
+            ]
+        };
 
         res.status(200).json(result);
     };

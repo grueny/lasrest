@@ -40,6 +40,7 @@ app.get('/partner/:id/kontakt', partnerController.getKontakte);
 // Angebote
 app.get('/angebote', angeboteController.getListOrCount);
 app.get('/angebot/:id', angeboteController.get);
+app.get('/angebot/:sparte/vorbelegung', angeboteController.getVorbelegung);
 
 // Antraege
 app.get('/antraege', antraegeController.getListOrCount);
