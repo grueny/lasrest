@@ -12,11 +12,13 @@ const repositories = require('./repositories')(server);
 const PartnerController = require('./controllers/partner'),
     AngeboteController = require('./controllers/angebote'),
     VertraegeController = require('./controllers/vertraege'),
+    BerufeController = require('./controllers/berufe'),
     AntraegeController = require('./controllers/antraege');
 
 const partnerController = new PartnerController(repositories),
     angeboteController = new AngeboteController(repositories),
     vertraegeController = new VertraegeController(repositories),
+    berufeController = new BerufeController(repositories),
     antraegeController = new AntraegeController(repositories);
 
 // middlewares
@@ -51,6 +53,9 @@ app.get('/antraege', antraegeController.getListOrCount);
 // Verträge
 app.get('/vertraege', vertraegeController.getListOrCount);
 app.get('/vertrag/:id', vertraegeController.get);
+
+// Berufe
+app.get('/berufe', berufeController.list);
 
 module.exports = app;
 
