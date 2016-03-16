@@ -2,6 +2,7 @@
 
 const express = require('express'),
     app = express(),
+    bodyParser = require('body-parser'),
     cors = require('cors'),
     port = process.env.PORT || 8080,
     server = process.env.LVM_PUBLIC_URL || `http://localhost:${port}`;
@@ -20,6 +21,7 @@ const partnerController = new PartnerController(repositories),
 
 // middlewares
 app.use(cors());
+app.use(bodyParser.json());
 app.use(function (req, res, next) {
     setTimeout(function () {
         next();
@@ -41,6 +43,7 @@ app.get('/partner/:id/kontakt', partnerController.getKontakte);
 app.get('/angebote', angeboteController.getListOrCount);
 app.get('/angebot/:id', angeboteController.get);
 app.get('/angebot/:sparte/vorbelegung', angeboteController.getVorbelegung);
+app.post('/angebot/:sparte/berechnen', angeboteController.berechnen);
 
 // Antraege
 app.get('/antraege', antraegeController.getListOrCount);

@@ -100,6 +100,73 @@ function AngeboteController(opts) {
 
         res.status(200).json(result);
     };
+    
+    this.berechnen = (req, res) => {
+        const sparte = req.params.sparte || '';
+
+        if (sparte.toLowerCase() !== 'kraftfahrt') {
+            res.status(400).send('bad request, sparte is invalid');
+            return next();
+        }
+
+        const result = [];
+        const errorCount = Math.floor(Math.random() * 6) + 1;
+        const randomPropertyNames = [];
+
+        for (let i = 0; i < errorCount; i++) {
+            const randomPropertyName = getRandomPropertyName(req.body);
+
+            if (randomPropertyNames.indexOf(randomPropertyName) > -1) {
+                continue;
+            }
+
+            randomPropertyNames.push(randomPropertyName);
+            result.push(createError(randomPropertyName));
+        }
+
+        res.status(400).json(result);
+    };
+
+    function createError(bezugsFeld) {
+        return {
+            fehlerId: Math.floor(Math.random() * 100 + 1),
+            fehlerKategorie: Math.floor(Math.random() * 3),
+            fehlerText: 'Bitte denken Sie sich Ihre eigene Fehlermeldung aus.',
+            bezugsFeld: bezugsFeld
+        };
+    }
+
+    function getRandomPropertyName(object) {
+        const keys = Object.keys(object);
+        let key;
+
+        do {
+            key = keys[Math.floor(Math.random() * keys.length)]
+        }
+        while (key.toLowerCase().indexOf('id') > -1 || key.toLowerCase().indexOf('uri') > -1);
+
+        const prop = object[key];
+
+        let result = key;
+
+        if (typeof prop === 'object') {
+            result += '.' + getRandomPropertyName(prop);
+        }
+
+        return result;
+    }
+
+    /*{
+        fehler: [
+            {
+                fehlerId: 123,
+                fehlerkategory: 0 // "error", "info", "warning"
+                fehlerText: "Bitte beantworten Sie die Gesundheitsfrage",
+                bezugsFeld: "Property vom Datenmodell, dass zum Fehler geführt hat"
+                // "person.vorname"
+            }
+        ]
+    }*/
 }
 
 module.exports = AngeboteController;
