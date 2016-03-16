@@ -12,7 +12,7 @@ function AngeboteRepository(server) {
         return {
             angebotId: angebotId,
             partnerId: 4711 + (currentId % 15),
-            angebotURI: `${server}/angebote/` + angebotId,
+            angebotURI: `${server}/angebot/` + angebotId,
             sparte: 'Kraftfahrt',
             rolle: 'Versicherungsnehmer',
             agentur: '2008/21',

@@ -7,6 +7,7 @@
 function AngeboteController(opts) {
     const angeboteRepository = opts.angeboteRepository;
     const partnerRepository = opts.partnerRepository;
+    const server = opts.server;
 
     this.getListOrCount = (req, res, next) => {
         const partnerId = parseInt(req.query.partnerId, 10);
@@ -99,6 +100,27 @@ function AngeboteController(opts) {
         };
 
         res.status(200).json(result);
+    };
+
+    this.create = (req, res, next) => {
+        const angebot = req.body;
+
+        if (!angebot) {
+            res.status(400).send('Body should not be empty');
+            return next();
+        }
+
+        if (!angebot.partnerId) {
+            res.status(400).send('partnerId is not set');
+            return next();
+        }
+
+        angebot.angebotId = angeboteRepository.length + 1;
+        angebot.angebotURI = `${server}/angebot/${angebot.angebotId}`;
+
+        angeboteRepository.push(req.body);
+
+        res.status(201).json(angebot);
     };
     
     this.berechnen = (req, res) => {

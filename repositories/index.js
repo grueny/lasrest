@@ -16,6 +16,7 @@ module.exports = function (server) {
         antraegeRepository: new AntraegeRepository(server),
         vertraegeRepository: new VertraegeRepository(server),
         berufeRepository: new BerufeRepository(server),
-        kontakthistorieRepository: new KontakthistorieRepository(server)
+        kontakthistorieRepository: new KontakthistorieRepository(server),
+        server: server
     };
 };

@@ -46,6 +46,7 @@ app.get('/angebote', angeboteController.getListOrCount);
 app.get('/angebot/:id', angeboteController.get);
 app.get('/angebot/:sparte/vorbelegung', angeboteController.getVorbelegung);
 app.post('/angebot/:sparte/berechnen', angeboteController.berechnen);
+app.post('/angebot', angeboteController.create);
 
 // Antraege
 app.get('/antraege', antraegeController.getListOrCount);
