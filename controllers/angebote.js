@@ -1,43 +1,208 @@
-(function(){
+'use strict';
 
-	function AngeboteController(server){
-		this.angebote = [
-			{ angebotId: 5711, angebotURI: `${server}/angebote/5711`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/21', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 9999 },
-			{ angebotId: 5712, angebotURI: `${server}/angebote/5712`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/20', versichertist: 'M-SQ 7',  schaeden: 1, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 12000 },
-			{ angebotId: 5713, angebotURI: `${server}/angebote/5713`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/19', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 10010 },
-			{ angebotId: 5714, angebotURI: `${server}/angebote/5714`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/18', versichertist: 'M-SQ 7',  schaeden: 1, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 11970 },
-			{ angebotId: 5715, angebotURI: `${server}/angebote/5715`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/17', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 10050 },
-			{ angebotId: 5716, angebotURI: `${server}/angebote/5716`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/16', versichertist: 'M-SQ 7',  schaeden: 1, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 11990 },
-			{ angebotId: 5717, angebotURI: `${server}/angebote/5717`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/15', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 9950 },
-			{ angebotId: 5718, angebotURI: `${server}/angebote/5718`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/14', versichertist: 'M-SQ 7',  schaeden: 1, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 11000 },
-			{ angebotId: 5719, angebotURI: `${server}/angebote/5719`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/13', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 9785 },
-			{ angebotId: 5720, angebotURI: `${server}/angebote/5720`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/12', versichertist: 'M-SQ 7',  schaeden: 1, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 11500 },
-			{ angebotId: 5721, angebotURI: `${server}/angebote/5721`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/11', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 9555 },
-			{ angebotId: 5799, angebotURI: `${server}/angebote/5799`, sparte: 'Kraftfahrt', rolle: 'Versicherungsnehmer', agentur: '2008/11', versichertist: 'M-RS 6',  schaeden: 0, ablauf: '', zahlungsweise: 'jährlich', beitragZent: 9559 }
-		];
-	}
+/**
+ * @public
+ * @constructor
+ */
+function AngeboteController(opts) {
+    const angeboteRepository = opts.angeboteRepository;
+    const partnerRepository = opts.partnerRepository;
+    const server = opts.server;
 
-	AngeboteController.prototype.getAll = function getAll(){
-		return this.angebote;
-	};
+    this.getListOrCount = (req, res, next) => {
+        const partnerId = parseInt(req.query.partnerId, 10);
 
-	AngeboteController.prototype.hasItemWithId = function hasItemWithId(id){
-		var found = this.angebote.filter(b => b.angebotId === id);
-		return found && found.length>0;
-	};
+        if (isNaN(partnerId)) {
+            res.status(400).send('bad request, partnerId should be an integer');
+            return next();
+        }
 
-	AngeboteController.prototype.getById = function getById(id){
-		var found = this.angebote.filter(b => b.angebotId === id);
-		if(!found || found.length ===0){
-			return null;
-		}
-		var item = JSON.parse(JSON.stringify(found[0]));
-		item.fahrzeugdaten = {fahrzeugart: 'PKW', kennzeichen: 'MS-CH 444', hsn: 432, typschl: 234, erstzulassung: '20.05.2015', fahrgestell: 'dj3rij35j42', fahrzeugstaerkePS: 340, austauschmotor: false, kennzeichenart: 'schwarzes Kennzeichen', wechselkennzeichen: false };
-        item.nutzung = {beliebigeFahrer: 'unbekannt', nachtAbstellplatz: 'Straßenrand', fahrleistungKm: 30000, kilometerstand: 120433, abweichenderFahrzeughalter: false, nutzung: 'privat', selbstGenEigentum: true, wohneigentumart: 'Wohnung'};
-        item.versSchutz = {haftpflichSFR: 'SF0 10%', volkaskoSFR: 'SF0 57%', tarifgruppe: 'normal', rahmenvertrag: 'keiner', versBeginn: '25.02.2016', zahlungsweise: 'monatlich'};
-        return item;
-	};
+        const mode = req.query.mode || 'list';
+        const items = angeboteRepository.filter(p => p.partnerId === partnerId)
+            .map(p => {
+                return {
+                    angebotId: p.angebotId,
+                    partnerId: p.partnerId,
+                    sparte: p.sparte,
+                    rolle: p.rolle,
+                    agentur: p.agentur,
+                    versichertist: p.versichertist,
+                    schaeden: p.schaeden,
+                    ablauf: p.ablauf,
+                    zahlungsweise: p.zahlungsweise,
+                    beitragZent: p.beitragZent,
+                    angebotURI: p.angebotURI
+                };
+            });
 
-	module.exports = AngeboteController;
-})();
+        if (mode === 'list') {
+            return res.status(200).json(items);
+        }
+        else {
+            return res.status(200).json({
+                count: items.length
+            });
+        }
+    };
 
+    this.get = (req, res, next) => {
+        const id = parseInt(req.params.id, 10);
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        let result = angeboteRepository.find(p => p.angebotId === id);
+
+        if (!result) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        res.status(200).json(result);
+    };
+
+    this.getVorbelegung = (req, res, next) => {
+        const id = parseInt(req.query.partnerId, 10);
+        const sparte = req.params.sparte || '';
+
+        if (isNaN(id)) {
+            res.status(400).send('bad request, id should be an integer');
+            return next();
+        }
+
+        if (sparte.toLowerCase() !== 'kraftfahrt') {
+            res.status(400).send('bad request, sparte is invalid');
+            return next();
+        }
+
+        let partner = partnerRepository.find(p => p.partnerId === id);
+
+        if (!partner) {
+            res.status(404).send('partner not found');
+            return next();
+        }
+
+        const result = {
+            geburtsdatum: partner.geburtsdatum,
+            anschrift: partner.anschrift,
+            zahlungsweise: [
+                {
+                    id: 1,
+                    name: 'monatlich'
+                },
+                {
+                    id: 2,
+                    name: 'jährlich'
+                }
+            ]
+        };
+
+        res.status(200).json(result);
+    };
+
+    this.create = (req, res, next) => {
+        const angebot = req.body;
+
+        if (!angebot) {
+            res.status(400).send('Body should not be empty');
+            return next();
+        }
+
+        if (!angebot.partnerId) {
+            res.status(400).send('partnerId is not set');
+            return next();
+        }
+
+        addAngebotId(angebot);
+        angeboteRepository.push(angebot);
+
+        res.status(201).json(angebot);
+    };
+
+    this.copy = (req, res, next) => {
+        const angebotId = parseInt(req.query.angebotId, 10);
+
+        if (isNaN(angebotId)) {
+            res.status(400).send('bad request, angebotId should be an integer');
+            return next();
+        }
+
+        const angebot = angeboteRepository.find(p => p.angebotId === angebotId);
+
+        if (!angebot) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        const copiedAngebot = JSON.parse(JSON.stringify(angebot));
+
+        addAngebotId(copiedAngebot);
+        angeboteRepository.push(copiedAngebot);
+
+        res.status(201).json(copiedAngebot);
+    };
+
+    function addAngebotId(angebot) {
+        angebot.angebotId = angeboteRepository.length + 1;
+        angebot.angebotURI = `${server}/angebot/${angebot.angebotId}`;
+    }
+    
+    this.berechnen = (req, res) => {
+        const sparte = req.params.sparte || '';
+
+        if (sparte.toLowerCase() !== 'kraftfahrt') {
+            res.status(400).send('bad request, sparte is invalid');
+            return next();
+        }
+
+        const result = [];
+        const errorCount = Math.floor(Math.random() * 6) + 1;
+        const randomPropertyNames = [];
+
+        for (let i = 0; i < errorCount; i++) {
+            const randomPropertyName = getRandomPropertyName(req.body);
+
+            if (randomPropertyNames.indexOf(randomPropertyName) > -1) {
+                continue;
+            }
+
+            randomPropertyNames.push(randomPropertyName);
+            result.push(createError(randomPropertyName));
+        }
+
+        res.status(400).json(result);
+    };
+
+    function createError(bezugsFeld) {
+        return {
+            fehlerId: Math.floor(Math.random() * 100 + 1),
+            fehlerKategorie: Math.floor(Math.random() * 3),
+            fehlerText: 'Bitte denken Sie sich Ihre eigene Fehlermeldung aus.',
+            bezugsFeld: bezugsFeld
+        };
+    }
+
+    function getRandomPropertyName(object) {
+        const keys = Object.keys(object);
+        let key;
+
+        do {
+            key = keys[Math.floor(Math.random() * keys.length)]
+        }
+        while (key.toLowerCase().indexOf('id') > -1 || key.toLowerCase().indexOf('uri') > -1);
+
+        const prop = object[key];
+
+        let result = key;
+
+        if (typeof prop === 'object') {
+            result += '.' + getRandomPropertyName(prop);
+        }
+
+        return result;
+    }
+}
+
+module.exports = AngeboteController;
