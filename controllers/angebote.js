@@ -122,7 +122,7 @@ function AngeboteController(opts) {
     };
 
     this.copy = (req, res, next) => {
-        const angebotId = parseInt(req.params.angebotId, 10);
+        const angebotId = parseInt(req.params.id, 10);
 
         if (isNaN(angebotId)) {
             res.status(400).send('bad request, angebotId should be an integer');
