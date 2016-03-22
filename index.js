@@ -73,7 +73,7 @@ app.get('/vertrag/:id/briefempfaenger', vertraegeController.getBriefempfaenger);
 app.get('/berufe', berufeController.list);
 
 // Schäden
-// Query Parameter: partnerId=partner&vertragsId=vertragId
+// Query Parameter: partnerId=partner&vsnr=vertragId
 app.get('/schaden/:sparte/vorbelegung', schadenController.getVorbelegung);
 app.post('/schaden', schadenController.create);
 
