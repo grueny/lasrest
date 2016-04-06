@@ -60,6 +60,10 @@ app.post('/angebot/:id', angeboteController.copy);
 // Antraege
 // Query Parameter: partnerId=partnerId&mode=(list|count)
 app.get('/antraege', antraegeController.getListOrCount);
+app.get('/antraege/:id', antraegeController.get);
+
+// Query Parameter: partnerId=partnerId
+app.post('/angebot/:id/beantragen', angeboteController.beantragen); //redirect get auf /antrag/:newid
 
 // Verträge
 // Query Parameter: partnerId=partnerId&mode=(list|count)

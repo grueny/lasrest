@@ -6,6 +6,7 @@
  */
 function AngeboteController(opts) {
     const angeboteRepository = opts.angeboteRepository;
+    const antraegeRepository = opts.antraegeRepository;
     const partnerRepository = opts.partnerRepository;
     const server = opts.server;
 
@@ -143,6 +144,39 @@ function AngeboteController(opts) {
 
         res.status(201).json(copiedAngebot);
     };
+
+    this.beantragen = (req, res, next) => {
+        const angebotId = parseInt(req.params.id, 10);
+
+        if (isNaN(angebotId)) {
+            res.status(400).send('bad request, angebotId should be an integer');
+            return next();
+        }
+
+        const angebot = angeboteRepository.find(p => p.angebotId === angebotId);
+
+        if (!angebot) {
+            res.status(404).send('item not found');
+            return next();
+        }
+
+        const copiedAngebot = JSON.parse(JSON.stringify(angebot));
+
+        const antragData = addAntragData(copiedAngebot);
+        antraegeRepository.push(antragData);
+
+        res.status(201).json(antragData);
+    };
+
+    function addAntragData(angebot){
+        angebot.antragId = antraegeRepository.length +1;
+        angebot.antragURI = `${server}/antrag/` + antragId
+        angebot.vorversicherer = [];
+        delete angebot.angebotId;
+        delete angebot.angebotURI;
+        return angebot;
+    }
+
 
     function addAngebotId(angebot) {
         angebot.angebotId = angeboteRepository.length + 1;
