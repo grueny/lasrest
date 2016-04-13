@@ -170,7 +170,7 @@ function AngeboteController(opts) {
 
     function addAntragData(angebot){
         angebot.antragId = antraegeRepository.length +1;
-        angebot.antragURI = `${server}/antrag/` + antragId
+        angebot.antragURI = `${server}/antrag/` + angebot.antragId
         angebot.vorversicherer = [];
         delete angebot.angebotId;
         delete angebot.angebotURI;
