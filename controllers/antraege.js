@@ -29,6 +29,7 @@ function AntraegeController(opts) {
     };
 
     this.get = (req, res, next) => {
+        console.log("getter");
         const id = parseInt(req.params.id, 10);
 
         if (isNaN(id)) {
@@ -36,7 +37,7 @@ function AntraegeController(opts) {
             return next();
         }
 
-        let result = antraegeRepository.find(p => p.angebotId === id);
+        let result = antraegeRepository.find(p => p.antragId === id);
 
         if (!result) {
             res.status(404).send('item not found');
